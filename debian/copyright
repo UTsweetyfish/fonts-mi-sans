@@ -1,8 +1,9 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: mi sans
 Source: https://github.com/
-
-
+Files-Excluded:
+ __MACOSX
+ .DS_Store */.DS_Store */*/.DS_Store
 
 Files: debian/*
 Copyright: 2024    xiangzelong <xiangzelong@deepin.org>

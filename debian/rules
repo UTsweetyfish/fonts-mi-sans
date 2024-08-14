@@ -1,7 +1,24 @@
 #!/usr/bin/make -f
+
+include /usr/share/dpkg/pkg-info.mk
+
 %:
 	dh $@
 
+FONT_URL := "https://hyperos.mi.com/font-download/MiSans.zip"
+FONT_DEST := "MiSans.zip"
+
 override_dh_auto_install:
-	dh_auto_install
-	chmod +x debian/postinst debian/postrm
+	install -D -m 0644 -t $(CURDIR)/debian/tmp/usr/share/fonts/opentype/mi-sans/ $(shell find otf/ -name '*.otf')
+	install -D -m 0644 -t $(CURDIR)/debian/tmp/usr/share/fonts/truetype/mi-sans/ $(shell find ttf/ -name '*.ttf')
+
+get-orig-source:
+	dh_testdir
+	# 4.003
+	test "$$(echo '4.003')" = "$(DEB_VERSION_UPSTREAM)" || (echo "DEB_VERSION_UPSTREAM must be 4.003" && exit 1)
+	wget -O ../$(FONT_DEST) $(FONT_URL)
+	echo '8fb800d83691e152e48ed0eb255c91e15ebbdb93104bbff02a75cad26fbce9cb  ../MiSans.zip' | sha256sum -c -
+
+	mk-origtargz ../$(FONT_DEST)
+	# deterministic
+	echo '7bfd60305eddf59ed092c640a93a10ab5d8d796e8d04a1bd794191ab3f0b0a92  ../fonts-mi-sans_4.003.orig.tar.xz' | sha256sum -c -
